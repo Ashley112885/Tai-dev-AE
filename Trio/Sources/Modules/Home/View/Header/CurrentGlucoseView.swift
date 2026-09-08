@@ -237,9 +237,9 @@ struct CurrentGlucoseView: View {
         }
         parts.append(TimeAgoFormatter.minutesAgoAccessible(from: glucose.last?.date))
         // Fold in the sensor-lifecycle tag (warmup countdown, "expired", "stabilizing") so
-        // it is spoken; the visual tag is a child that the ignore above would otherwise drop.
-        if let tag = tagLabel, !trendIsDownward, !tag.text.isEmpty {
-            parts.append(tag.text)
+        // it is spoken; the icon overlay is a child that the ignore above would otherwise drop.
+        if let tag = sensorLifecycleAccessibilityText, !trendCollidesWithTag, !tag.isEmpty {
+            parts.append(tag)
         }
         return parts.joined(separator: ", ")
     }
@@ -394,6 +394,30 @@ struct CurrentGlucoseView: View {
             }
         }
         if cgmStatus != nil { return "hourglass" }
+        return nil
+    }
+
+    /// Spoken counterpart to `sensorLifecycleSymbol` — the overlay is icon-only
+    /// (see the comment above it), so VoiceOver needs the underlying text
+    /// instead of the glyph. Mirrors the same gating/precedence as the icon
+    /// so it is spoken exactly when the icon is shown.
+    private var sensorLifecycleAccessibilityText: String? {
+        if isInWarmup {
+            guard let endsAt = cgmWarmupEndsAt else {
+                return String(localized: "warming up", comment: "Accessibility: sensor lifecycle tag")
+            }
+            return SensorRemainingTimeFormatter.format(until: endsAt)
+        }
+        if isStabilizing {
+            return String(localized: "stabilizing", comment: "Accessibility: sensor lifecycle tag")
+        }
+        guard shouldShowArc else { return nil }
+        if let expiresAt = cgmSensorExpiresAt {
+            return SensorRemainingTimeFormatter.format(until: expiresAt)
+        }
+        if let status = cgmStatus {
+            return status.localizedMessage.replacingOccurrences(of: "\n", with: " ")
+        }
         return nil
     }
 
