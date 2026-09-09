@@ -420,6 +420,10 @@ enum TherapySettingUnit: String, CaseIterable {
             return String(localized: "millimoles per liter", comment: "Accessibility: spoken unit")
         case .mgdL:
             return String(localized: "milligrams per deciliter", comment: "Accessibility: spoken unit")
+        case .mgdLPer10Gram:
+            return String(localized: "milligrams per deciliter per 10 grams", comment: "Accessibility: spoken unit")
+        case .mmolLPer10Gram:
+            return String(localized: "millimoles per liter per 10 grams", comment: "Accessibility: spoken unit")
         }
     }
 }
