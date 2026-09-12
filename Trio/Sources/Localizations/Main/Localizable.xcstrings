@@ -116049,6 +116049,9 @@
         }
       }
     },
+    "Double-Tap" : {
+
+    },
     "Drag" : {
 
     },
@@ -229824,6 +229827,9 @@
         }
       }
     },
+    "Pans the chart through time. Flick and let go to keep it gliding." : {
+
+    },
     "Past 24 Hours " : {
       "comment" : "Duration displayed in statPanel",
       "extractionState" : "manual",
@@ -236194,6 +236200,9 @@
           }
         }
       }
+    },
+    "Press and Hold" : {
+
     },
     "Preview Contact Image" : {
       "localizations" : {
@@ -251000,6 +251009,9 @@
           }
         }
       }
+    },
+    "Rest a finger on the chart to inspect a single reading with its IOB and COB." : {
+
     },
     "Rest your finger on the chart to inspect a single reading with its IOB and COB." : {
 
@@ -279974,6 +279986,9 @@
           }
         }
       }
+    },
+    "Steps through the zoom presets — 6, 12 and 24 hours — keeping the right-hand edge of the window where it is." : {
+
     },
     "Stop" : {
       "localizations" : {
@@ -346771,6 +346786,9 @@
           }
         }
       }
+    },
+    "Zooms continuously, between one hour and a full day on screen." : {
+
     },
     "ZT" : {
       "localizations" : {
