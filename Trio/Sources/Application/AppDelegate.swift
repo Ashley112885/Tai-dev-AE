@@ -13,19 +13,40 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject, UNUserNoti
         let crashReportingEnabled: Bool = PropertyPersistentFlags.shared.crashlyticsSharingEnabled ?? true
         CrashReportingGate.configureAtLaunch(enabled: crashReportingEnabled)
 
-        // Telemetry: record this cold launch into the sliding 7-day window. If
-        // consent is set and the build SHA changed since the last successful
-        // send, fire an immediate ping — the 24h scheduler can't notice a
-        // build update on its own. Then arm the recurring 24h timer.
+        // Materialize the install ID even when sharing is disabled, then record
+        // this cold launch into the sliding 7-day window,
+        // then drive cadence via layered triggers — listed below in
+        // priority of reliability:
+        //
+        //   1. SHA-change ping: build updated since last send. Awaited so
+        //      the lastSentAt stamp is fresh before the overdue check.
+        //   2. checkAndSendIfOverdue: covers the regular cold launch on the
+        //      same build when >24h has passed since the last successful
+        //      send. Together with the foreground-transition hook below
+        //      (`applicationWillEnterForeground`), this keeps daily pings
+        //      flowing on iOS. Fresh CGM processing performs the same check
+        //      under its own bounded background task for background-heavy use.
+        //   3. scheduleRecurring: best-effort fallback for the rare case
+        //      where the app stays foregrounded for a full 24h.
+        TelemetryClient.shared.initializeInstallID()
         TelemetryClient.shared.recordColdLaunch()
         Task.detached {
             if TelemetryClient.shared.buildShaChangedSinceLastSend() {
-                await TelemetryClient.shared.maybeSend()
+                await TelemetryClient.shared.maybeSend(reason: .buildChange)
             }
             TelemetryClient.shared.scheduleRecurring()
+            TelemetryClient.shared.checkAndSendIfOverdue(reason: .coldLaunch)
         }
 
         return true
+    }
+
+    /// Foreground-transition entry point for telemetry cadence. Re-evaluates
+    /// the overdue window every time the user brings Trio to the foreground,
+    /// since `scheduleRecurring`'s GCD timer doesn't fire while suspended.
+    /// No-op if a send already landed within the last 24h.
+    func applicationWillEnterForeground(_: UIApplication) {
+        TelemetryClient.shared.checkAndSendIfOverdue(reason: .foreground)
     }
 
     func application(

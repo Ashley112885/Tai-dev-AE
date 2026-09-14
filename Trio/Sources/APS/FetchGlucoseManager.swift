@@ -342,6 +342,8 @@ final class BaseFetchGlucoseManager: FetchGlucoseManager, Injectable {
             return
         }
 
+        TelemetryClient.shared.checkAndSendIfOverdueInBackground()
+
         endBackgroundTaskSafely(&backgroundTaskID, taskName: "Glucose Store and Heartbeat Decision")
     }
 
