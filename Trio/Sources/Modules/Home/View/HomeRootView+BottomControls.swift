@@ -232,6 +232,7 @@ extension Home.RootView {
             hasTempTarget: tempTargetString != nil,
             hasTempProfile: activeProfile.first?.expiresAt != nil,
             hasUnacknowledgedReleaseNotes: releaseNotesService.hasUnacknowledgedNotes,
+            dosingMode: state.dosingMode,
             now: state.timerDate
         )
     }
@@ -413,6 +414,16 @@ extension Home.RootView {
                     showReleaseNotes = true
                 }
                 .transition(.blurReplace)
+            case let .dosingModeLimited(mode):
+                panelBanner(
+                    systemImage: mode.icon,
+                    title: mode.displayName,
+                    subtitle: mode.miniHint,
+                    tint: .orange
+                ) {
+                    openDosingModeSetting()
+                }
+                .transition(.blurReplace)
             case .stats:
                 // The face setting can put the (indefinite) profile card here.
                 if state.settingsManager?.settings.homeStatsPanelFace == .profile, activeProfile.first != nil {
@@ -431,6 +442,11 @@ extension Home.RootView {
             .easeInOut(duration: multiUsePanelState == .bolusProgress ? 0.25 : 0.7),
             value: multiUsePanelState
         )
+    }
+
+    /// The mode picker sits on the Settings root, so there is no sub-screen target to push.
+    func openDosingModeSetting() {
+        selectedTab = 3
     }
 
     func openMaxIOBSetting() {
