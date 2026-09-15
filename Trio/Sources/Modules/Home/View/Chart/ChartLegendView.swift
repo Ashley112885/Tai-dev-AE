@@ -99,7 +99,7 @@ struct ChartLegendView: View {
                             .padding(.vertical, 5)
 
                             DefinitionRow(
-                                term: String(localized: "Tap Trio Button"),
+                                term: String(localized: "Tap Tai Button"),
                                 definition: Text("Opens the treatment view to add carbs, insulin or a manual glucose reading."),
                                 color: Color.primary,
                                 iconString: "hand.tap"
@@ -270,7 +270,9 @@ struct ChartLegendView: View {
                                 term: String(localized: "Scheduled Basal Rate"),
                                 definition: VStack(alignment: .leading, spacing: 10) {
                                     Text("This dotted line represents the hourly insulin rate of your scheduled basal insulin.")
-                                    Text("To review or change your scheduled basal rates, go to Settings > Therapy > Basal Rates.")
+                                    Text(
+                                        "To review or change your scheduled basal rates, go to Settings > Therapy > Basal Rates."
+                                    )
                                 },
                                 color: Color.insulin,
                                 iconString: "ellipsis"
