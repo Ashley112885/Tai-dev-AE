@@ -621,6 +621,7 @@ import Testing
             return try DeterminationGenerator.determineBasal(
                 profile: profile,
                 preferences: preferences,
+                units: .mgdL,
                 currentTemp: currentTemp,
                 iobData: iobData,
                 mealData: mealData,
@@ -628,6 +629,7 @@ import Testing
                 reservoirData: reservoirData,
                 glucoseStatus: glucoseStatus,
                 microBolusAllowed: microBolusAllowed,
+                autoISFStatus: nil,
                 trioCustomOrefVariables: trioCustomOrefVariables,
                 currentTime: currentTime
             )
@@ -667,6 +669,7 @@ import Testing
         let result = try DeterminationGenerator.determineBasal(
             profile: profile,
             preferences: preferences,
+            units: .mgdL,
             currentTemp: currentTemp,
             iobData: iobData,
             mealData: mealData,
@@ -674,6 +677,7 @@ import Testing
             reservoirData: reservoirData,
             glucoseStatus: glucoseStatus,
             microBolusAllowed: microBolusAllowed,
+            autoISFStatus: nil,
             trioCustomOrefVariables: trioCustomOrefVariables,
             currentTime: currentTime
         )
