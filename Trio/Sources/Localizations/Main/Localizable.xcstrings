@@ -57866,6 +57866,9 @@
         }
       }
     },
+    "Basal" : {
+      "comment" : "Treatment label in history for scheduled basal"
+    },
     "Basal Insulin and Sensitivity ratio" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -129988,6 +129991,7 @@
     },
     "Error" : {
       "comment" : "Error title",
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -136023,9 +136027,6 @@
           }
         }
       }
-    },
-    "Failed to delete glucose data: %@" : {
-      "comment" : "Error alert shown when glucose deletion from CoreData fails — interpolated value is a localized error description from the OS"
     },
     "Failed to execute a batch delete request in %@ from %@." : {
       "localizations" : {
@@ -289089,7 +289090,7 @@
       "comment" : "Tag chip in Loop status popup — total daily dose"
     },
     "Temp Basal" : {
-      "comment" : "Treatment history type label — temporary basal\nTreatment type",
+      "comment" : "Treatment history type label — temporary basal\nTreatment label in history for temporary basal\nTreatment type",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
