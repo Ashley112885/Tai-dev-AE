@@ -767,13 +767,15 @@ final class BaseAPSManager: APSManager, Injectable {
 
         guard let pump = pumpManager else { return }
 
-        // Unable to set a manual temp basal on top of one already running.
-        if isManualTempBasal {
-            processError(APSError.manualBasalTemp(message: "Algorithm not enacted during manual TBR"))
+        // Unable to stack a new manual temp basal on top of one already running;
+        // the cancel call (rate 0, duration 0) always passes.
+        if isManualTempBasal, rate > 0, duration > 0 {
+            processError(APSError.manualBasalTemp(message: "Manual temp basal already running"))
             return
         }
 
-        let adjustedRate = adjustPumpedRateToConcentration(rate).deliverable
+        let safeRate = min(rate, Double(settingsManager.pumpSettings.maxBasal))
+        let adjustedRate = adjustPumpedRateToConcentration(safeRate).deliverable
         let roundedRate = pump.roundToSupportedBasalRate(unitsPerHour: adjustedRate)
 
         debug(.apsManager, "Enact manual temp basal \(roundedRate) - \(duration)")
