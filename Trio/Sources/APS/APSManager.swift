@@ -14,6 +14,9 @@ protocol APSManager {
     /// they want feedback even if the underlying error is "transient".
     func markNextLoopUserInitiated()
     func enactBolus(amount: Double, isSMB: Bool, callback: ((Bool, String) -> Void)?) async
+    /// User-driven temp basal outside the algorithm loop. `rate: 0, duration: 0` cancels a
+    /// running one, per the `PumpManager.enactTempBasal` convention.
+    func enactManualTempBasal(rate: Double, duration: TimeInterval) async
     var pumpManager: PumpManagerUI? { get set }
     var bluetoothManager: BluetoothStateManager? { get }
     var pumpDisplayState: CurrentValueSubject<PumpDisplayState?, Never> { get }
@@ -753,6 +756,34 @@ final class BaseAPSManager: APSManager, Injectable {
                 false,
                 String(localized: "Error! Bolus failed with error: \(error.localizedDescription)")
             )
+        }
+    }
+
+    func enactManualTempBasal(rate: Double, duration: TimeInterval) async {
+        if let error = verifyStatus() {
+            processError(error)
+            return
+        }
+
+        guard let pump = pumpManager else { return }
+
+        // Unable to set a manual temp basal on top of one already running.
+        if isManualTempBasal {
+            processError(APSError.manualBasalTemp(message: "Algorithm not enacted during manual TBR"))
+            return
+        }
+
+        let adjustedRate = adjustPumpedRateToConcentration(rate).deliverable
+        let roundedRate = pump.roundToSupportedBasalRate(unitsPerHour: adjustedRate)
+
+        debug(.apsManager, "Enact manual temp basal \(roundedRate) - \(duration)")
+
+        do {
+            try await pump.enactTempBasal(unitsPerHour: roundedRate, for: duration)
+            debug(.apsManager, "Manual temp basal succeeded")
+        } catch {
+            debug(.apsManager, "Manual temp basal failed with error: \(error)")
+            processError(APSError.pumpError(error))
         }
     }
 
