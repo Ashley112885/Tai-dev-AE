@@ -127,7 +127,8 @@ import Foundation
     // MARK: - Private Methods
 
     private var shouldRefresh: Bool {
-        Date().timeIntervalSince(lastFetched ?? .distantPast) > Self.refreshInterval
+        // A cache without the installed version predates this build, so refetch right away.
+        notes == nil || Date().timeIntervalSince(lastFetched ?? .distantPast) > Self.refreshInterval
     }
 
     /// Best available releases without touching the network.
