@@ -240663,6 +240663,7 @@
       }
     },
     "Previous Versions" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
