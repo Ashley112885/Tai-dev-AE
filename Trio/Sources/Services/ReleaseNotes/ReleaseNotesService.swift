@@ -127,7 +127,6 @@ import Foundation
     // MARK: - Private Methods
 
     private var shouldRefresh: Bool {
-        // A cache without the installed version predates this build, so refetch right away.
         notes == nil || Date().timeIntervalSince(lastFetched ?? .distantPast) > Self.refreshInterval
     }
 
