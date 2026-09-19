@@ -410,9 +410,9 @@ extension Settings {
                                     }
                                 }
 
-                                if !releaseNotesService.releases.isEmpty {
+                                if !releaseNotesService.previousReleases.isEmpty {
                                     NavigationLink(
-                                        destination: ReleaseNotesListView(releases: releaseNotesService.releases)
+                                        destination: ReleaseNotesListView(releases: releaseNotesService.previousReleases)
                                     ) {
                                         Text("Previous Release Notes")
                                             .foregroundColor(.primary)
