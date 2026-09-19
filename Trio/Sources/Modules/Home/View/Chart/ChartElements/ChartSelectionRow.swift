@@ -151,7 +151,7 @@ struct ChartSelectionRow: View {
                 value: iobString.map { Text($0) + iobUnit } ?? Self.missingValue
             )
 
-            // a determination with zero COB drops the item entirely rather than showing "0 g"
+            // zero COB and a missing determination both drop the item entirely — no glyph, no dash
             let cobUnit = Text(String(localized: " g", comment: "gram of carbs")).fontWeight(.regular)
             if let determination, determination.cob > 0 {
                 let cobString = Formatter.integerFormatter.string(from: determination.cob as NSNumber)
@@ -160,8 +160,6 @@ struct ChartSelectionRow: View {
                     tint: .loopYellow,
                     value: cobString.map { Text($0) + cobUnit } ?? Self.missingValue
                 )
-            } else if determination == nil {
-                item(customImage: "premeal", tint: .loopYellow, value: Self.missingValue)
             }
         }
         .font(font).fontWeight(.bold).fontDesign(.rounded)
