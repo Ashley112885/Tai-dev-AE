@@ -60,15 +60,12 @@ import Foundation
 
     /// Notes matching this build's version. `nil` when none could be found.
     var notes: ReleaseNotes? {
-        releases.first { $0.version == installedVersion }
+        releases.first { Self.versionsMatch($0.version, installedVersion) }
     }
 
     /// Every release older than this build's, newest first.
     var previousReleases: [ReleaseNotes] {
-        guard let notes else {
-            return releases
-        }
-        return releases.filter { $0.version != notes.version }
+        releases.filter { !Self.versionsMatch($0.version, installedVersion) }
     }
 
     // MARK: - Derived State
@@ -207,6 +204,20 @@ import Foundation
             return []
         }
         return pieces.compactMap { $0 }
+    }
+
+    private static func versionsMatch(_ lhs: String, _ rhs: String) -> Bool {
+        var lhsComponents = versionComponents(lhs)
+        var rhsComponents = versionComponents(rhs)
+
+        while lhsComponents.count > 1, lhsComponents.last == 0 {
+            lhsComponents.removeLast()
+        }
+        while rhsComponents.count > 1, rhsComponents.last == 0 {
+            rhsComponents.removeLast()
+        }
+
+        return !lhsComponents.isEmpty && lhsComponents == rhsComponents
     }
 }
 
