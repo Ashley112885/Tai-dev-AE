@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Lists the releases preceding this build, each pushing its own notes.
+/// Lists every supported release through this build, newest first, each pushing its own notes.
 struct ReleaseNotesListView: View {
     let releases: [ReleaseNotes]
 
