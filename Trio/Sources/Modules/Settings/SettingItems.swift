@@ -122,6 +122,8 @@ enum SettingItems {
                 "Swissalpine",
                 "Datafield Selection",
                 "Disable Watchface Data",
+                "Enable Watch Commands",
+                "Allow Bolus Commands",
                 "Data Choice 1",
                 "Data Choice 2",
                 "COB",
