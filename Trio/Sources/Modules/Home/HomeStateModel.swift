@@ -984,7 +984,7 @@ extension Home {
                 }
                 // Warmup / initializing / expired: no meaningful expiry yet.
                 return nil
-                
+
             case let eversense as EversenseCGMManager:
                 return eversense.state.expiresAt
 
